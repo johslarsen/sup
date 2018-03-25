@@ -369,7 +369,6 @@ class ThreadSet
         process_thread_json mjson, tid, parentmid
       else
         mid = mjson['id']
-        parentmid = mid if i == 0
         c = @messages[mid] # the container
         next if c.message # already seen the message
         m = Message.new tid: tid, json: mjson
@@ -381,6 +380,7 @@ class ThreadSet
           thread << root
           root.thread = thread
         end
+        parentmid = mid if i == 0
 
         @num_messages += 1
       end
