@@ -66,6 +66,8 @@ private
       end
       @buf << m
     end
+  rescue ThreadError
+    # ignore log messages causing deadlock (e.g. debug from LogMode spawning)
   end
 end
 
