@@ -41,7 +41,8 @@ class Message
 
   attr_reader :id, :date, :from, :subj, :refs, :replytos, :to,
               :cc, :bcc, :labels, :attachments, :list_address, :recipient_email, :replyto,
-              :list_subscribe, :list_unsubscribe, :filename
+              :list_subscribe, :list_unsubscribe, :filename,
+              :raw_header
 
   bool_reader :dirty, :dirty_labels, :source_marked_read, :snippet_contains_encrypted_content
 
@@ -59,6 +60,7 @@ class Message
     @attachments = []
     @thread_id = opts[:tid]
     @id = nil
+    @raw_header = ""
 
     ## we need to initialize this. see comments in parse_header as to
     ## why.
@@ -99,6 +101,8 @@ class Message
   end
 
   def parse_header encoded_header
+    @raw_header = encoded_header.to_s
+
     header = SavingHash.new { |k| decode_header_field encoded_header[k] }
 
     @id = ''
@@ -294,16 +298,18 @@ class Message
 EOS
   end
 
-  def raw_header
-    location.raw_header
-  end
-
   def raw_message
-    location.raw_message
+    raw = ""
+    each_raw_message_line{|l| raw << l}
+    raw
   end
 
-  def each_raw_message_line &b
-    location.each_raw_message_line &b
+  def each_raw_message_line
+    File.open(@filename[0], 'rb') do |f|
+      until f.eof?
+        yield f.gets
+      end
+    end
   end
 
   def sync_back
