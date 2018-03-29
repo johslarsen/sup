@@ -289,6 +289,7 @@ EOS
     if message
       mode = ResumeMode.new message
       BufferManager.spawn "Edit message", mode
+      mode.default_edit_message
     else
       BufferManager.flash "Not a draft message!"
     end
