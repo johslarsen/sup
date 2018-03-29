@@ -454,16 +454,6 @@ class String
 end
 
 class Numeric
-  def clamp min, max
-    if self < min
-      min
-    elsif self > max
-      max
-    else
-      self
-    end
-  end
-
   def in? range; range.member? self; end
 
   def to_human_size

@@ -121,7 +121,7 @@ class ScrollMode < Mode
 
   ## set top line to l
   def jump_to_line l
-    l = l.clamp 0, lines - 1
+    l = l.clamp 0, [lines - 1, 0].max
     return if @topline == l
     @topline = l
     @botline = [l + buffer.content_height, lines].min

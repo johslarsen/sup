@@ -72,14 +72,14 @@ protected
   def ensure_mode_validity
     super
     raise @curpos.inspect unless @curpos.is_a?(Integer)
-    c = @curpos.clamp topline, botline - 1
+    c = @curpos.clamp topline, [botline - 1, topline].max
     c = @cursor_top if c < @cursor_top
     if c != @curpos
       buffer.mark_dirty
       # try to handle curpos changes due to resize
       jump_to_line @topline + (@curpos - c) if c < @curpos
       # recalculate c
-      c = @curpos.clamp topline, botline - 1
+      c = @curpos.clamp topline, [botline - 1, topline].max
       @curpos = c
     end
   end

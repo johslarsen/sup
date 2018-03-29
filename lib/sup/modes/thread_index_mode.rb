@@ -270,12 +270,12 @@ EOS
       ## let's see you do THIS in python
       @threads = @ts.threads.select { |t| !@hidden_threads.member?(t) }.select(&:has_message?).sort_by(&:sort_key)
       @size_widgets = @threads.map { |t| size_widget_for_thread t }
-      @size_widget_width = @size_widgets.max_of { |w| w.display_length }
+      @size_widget_width = @size_widgets.max_of { |w| w.display_length } || 0
       @date_widgets = @threads.map { |t| date_widget_for_thread t }
-      @date_widget_width = @date_widgets.max_of { |w| w.display_length }
+      @date_widget_width = @date_widgets.max_of { |w| w.display_length } || 0
       if $config[:patchwork]
         @patchwork_widgets = @threads.map { |t| patchwork_widgets_for_thread t }
-        @patchwork_widget_width = @patchwork_widgets.max_of { |w| w.display_length }
+        @patchwork_widget_width = @patchwork_widgets.max_of { |w| w.display_length } || 0
       end
     end
     set_cursor_pos @threads.index(old_cursor_thread)||curpos
