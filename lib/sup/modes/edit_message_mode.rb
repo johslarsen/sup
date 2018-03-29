@@ -596,7 +596,15 @@ protected
         raise SendmailCommandFailed, "Couldn't execute #{acct.sendmail}" unless $? == 0
       end
 
-      SentManager.write_sent_message(date, from_email) { |f| f.puts sanitize_body(m.to_s) }
+      Notmuch.insert m.to_s, "sent"
+      Notmuch.poll(hooks: false)
+      indexed = Message.new id: @message_id
+      indexed.add_label :sent
+      indexed.remove_label :unread
+      indexed.sync_back_labels
+      UpdateManager.relay self, :updated, indexed
+      UpdateManager.relay self, :thread_ids_updated, [indexed.thread_id]
+
       BufferManager.kill_buffer buffer
       BufferManager.flash "Message sent!"
       true

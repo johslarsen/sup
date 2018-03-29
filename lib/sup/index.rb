@@ -35,12 +35,16 @@ EOS
     run('count', '--lastmod').split.last.to_i
   end
 
-  def poll
-    run('new', '--quiet')
+  def poll(hooks:true)
+    args = ["new", "--quiet"]
+    args << "--no-hooks" unless hooks
+    run(*args)
   end
 
-  def insert(data)
-    run('insert', '--create-folder', input: data)
+  def insert(data, folder)
+    args = ["insert", "--create-folder"]
+    args << "--folder" << folder if folder
+    run(*args, input: data)
   end
 
   def count(*query)

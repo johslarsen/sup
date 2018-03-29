@@ -19,11 +19,13 @@ class DraftManager
     # delete the file with a same message_id
     delete_message_files message_id
 
-    Notmuch.insert(content)
+    Notmuch.insert(content, "draft")
     m = Message.new id: message_id # will load thread_it etc. via notmuch
     m.add_label :draft
+    m.remove_label :unread
     m.sync_back_labels
     UpdateManager.relay self, :updated, m
+    UpdateManager.relay self, :thread_ids_updated, [m.thread_id]
   end
 
   def discard m
@@ -41,7 +43,7 @@ class DraftManager
     if not filenames.empty?
       debug "Deleting #{filenames}"
       FileUtils.rm_f filenames
-      Notmuch.poll if sync
+      Notmuch.poll(hooks: false) if sync
     end
   end
 end
