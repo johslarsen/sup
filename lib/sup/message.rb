@@ -82,7 +82,7 @@ class Message
     @id = mjson['id']
     @labels |= Set.new((mjson['tags'] || []).map(&:to_sym))
     @subj = mjson['headers']['Subject']
-    @filename = mjson['filename']
+    @filename = mjson['filename'][0]
     @date_relative = mjson['date_relative']
     @from = Person.from_address(mjson['headers']['From'])
     @to = Person.from_address_list(mjson['headers']['To'])
@@ -252,7 +252,7 @@ class Message
         ## bloat the index.
         ## actually, it's also the differentiation between to/cc/bcc,
         ## so i will keep this.
-        rmsg = File.open(@filename[0], 'rb') {|f| RMail::Parser.read f}
+        rmsg = File.open(@filename, 'rb') {|f| RMail::Parser.read f}
         parse_header rmsg.header
         message_to_chunks rmsg
       rescue SocketError, RMail::EncodingUnsupportedError => e
