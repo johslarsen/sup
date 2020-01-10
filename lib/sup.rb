@@ -4,6 +4,9 @@ require 'thread'
 require 'fileutils'
 require 'locale'
 require 'ncursesw'
+
+Fixnum = Integer
+
 require 'rmail'
 require 'uri'
 begin

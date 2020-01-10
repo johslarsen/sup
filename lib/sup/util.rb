@@ -476,7 +476,7 @@ class Numeric
   end
 end
 
-class Fixnum
+class Integer
   def to_character
     if self < 128 && self >= 0
       chr

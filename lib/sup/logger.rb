@@ -66,6 +66,7 @@ private
       end
       @buf << m
     end
+  rescue
   end
 end
 
