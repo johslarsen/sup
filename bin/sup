@@ -399,7 +399,11 @@ ensure
     debug "no fatal errors. good job, william."
     Index.save
   else
-    error "oh crap, an exception"
+    Redwood::exceptions.each do |e, thread|
+      $stderr.puts "Thread #{thread} exception: #{e}:\n  #{e.backtrace.join("\n  ")}"
+    end
+    exit 2
+    #error "oh crap, an exception"
   end
 
   Index.unlock

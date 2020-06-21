@@ -72,7 +72,7 @@ end
 
 ## include me to have top-level #debug, #info, etc. methods.
 module LogsStuff
-  Logger::LEVELS.each { |l| define_method(l) { |s| Logger.instance.send(l, s) } }
+  Logger::LEVELS.each { |l| define_method(l) { |*s| Logger.instance.send(l, s[0]) } }
 end
 
 end
